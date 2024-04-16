@@ -69,6 +69,7 @@ class Peixe {
     }
   }
 }
+
 class Algas {
   int numFolhas = 5; // Deifne o numero de folhas
   int l = 10; // Defile a largura das algas
@@ -82,9 +83,13 @@ class Algas {
     }
     this.posicao = posicao;
   }
+  int d = 0;
+  void Atualiza(){
+    d = (int)random(1000);
+  }
 
   void Desenha () {
-
+    randomSeed(d);
     for (int i = 0; i < numFolhas; i++) {
 
       h = int(folha[i]); // Altura da folha
@@ -99,7 +104,8 @@ class Algas {
 
       fill(#34B261);
       stroke(#34B261);
-      rect((int)random(posicao * l-(l/2), posicao * l+(l/2)), height-(k+h), l, h);
+      int x = (int)random(posicao * l-(l/2), posicao * l+(l/2));
+      rect(x, height-(k+h), l, h);
     }
   }
 }
@@ -124,12 +130,24 @@ void setup() {
   }
 }
 
+int cAlga = 0;
 void algas () {
   //Algas
+  cAlga = cAlga + 1;
+  
   for (int i = 0; i < alga1.length; i++) {
-    alga1[i].Desenha();
-    alga2[i].Desenha();
-    delay(100);
+    
+    if(cAlga%100 == 0){
+      alga1[i].Atualiza();
+      alga1[i].Desenha();
+      alga2[i].Atualiza();
+      alga2[i].Desenha();
+    }
+    else{
+      alga1[i].Desenha();
+      alga2[i].Desenha();
+    }
+  
   }
 }
 
