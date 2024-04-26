@@ -42,6 +42,7 @@ void setup() {
 void mouseReleased() {
   bolas.add(new Bola(mouseX, mouseY));
 }
+
 void draw() {
   background(#74B8FF);
   
