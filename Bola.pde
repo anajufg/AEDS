@@ -18,12 +18,12 @@ class Bola {
  }
  
  void Update() {
-   vy = vy + ay;
    y = y + (int)vy;
+   vy = vy + ay;
    
-   if (y >= height) {
+   if (y >= height-r/2) {
      vy = -0.9*vy; 
-     y = height;
+     y = height-r/2;
    }
  }
  
