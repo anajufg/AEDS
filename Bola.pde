@@ -21,7 +21,7 @@ class Bola {
    y = y + (int)vy;
    vy = vy + ay;
    
-   if (y >= height-r/2) {
+   if (y+r/2 >= height) {
      vy = -0.9*vy; 
      y = height-r/2;
    }
