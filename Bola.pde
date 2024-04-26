@@ -19,7 +19,7 @@ class Bola {
  
  void Update() {
    vy = vy + ay;
-   y = y + (int)vy; // frameRate
+   y = y + (int)vy;
    
    if (y >= height) {
      vy = -0.9*vy; 
