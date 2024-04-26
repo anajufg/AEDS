@@ -7,13 +7,14 @@ class Bola {
  int y;
  float vy;
  float ay;
- int r = 100;
+ int r;
  
  Bola(int x, int y) {
    this.x = x;
    this.y = y;
    vy = 0;
    ay = 0.1;
+   r = 100;
  }
  
  void Update() {
