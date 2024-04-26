@@ -42,7 +42,7 @@ void mouseReleased() {
   bolas.add(new Bola(mouseX, mouseY));
 }
 void draw() {
-  background(0);
+  background(#74B8FF);
   
   for (int i = 0; i < bolas.size(); i++) {
    bolas.get(i).Show();
