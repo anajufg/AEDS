@@ -41,7 +41,7 @@ void shellSort(int[] array) {
   int n = array.length; // Tamanho do array
   x = 1; 
   
-  // Define de quanto em quanto seram feita as primeiras comparações
+  // Define de quanto em quanto serão feita as primeiras comparações
   while (x < n/3) x = (3*x) + 1;
   
   while (x >= 1) {
