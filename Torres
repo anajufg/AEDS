@@ -1,0 +1,89 @@
+import java.util.Stack;
+
+int n = 5;
+float l, h = 300;
+Stack<Integer> torre1;
+int torre1PosX = 300;
+
+void setup() {
+  size(600,600);
+  
+  torre1 = iniciaTorre();
+}
+
+void draw() {
+  background(#F5CDCD);
+  
+  mostraTorre(torre1, torre1PosX);
+}
+
+Stack<Integer> iniciaTorre() {
+
+  Stack<Integer> torre = new Stack<Integer>();
+
+  for (int i = 0; i < n; i++) {
+    int randomInt = (int)random(10); // Gera um número aleatório entre 0 e 4
+
+    // Convertendo o número aleatório em um valor inteiro entre 1 e 5
+    /*switch(randomInt) {
+    case 0:
+      randomInt = 1;
+      break;
+    case 1:
+      randomInt = 2;
+      break;
+    case 2:
+      randomInt = 3;
+      break;
+    case 3:
+      randomInt = 4;
+      break;
+    case 4:
+      randomInt = 5;
+      break;
+    default:
+      break;
+    }*/
+
+    torre.push(randomInt); // Atribui o valor aleatório à pilha
+    println(randomInt);
+  }
+
+  return torre;
+}
+
+void mostraTorre(Stack<Integer> torre, int torrePosX) {
+  
+  int i = 1;
+  
+  for (Integer peca: torre) {
+    noStroke();
+
+    // Define a cor de preenchimento de cada peça
+    /*switch(peca) {
+    case 1:
+      fill(#2ECE37); 
+      break;
+    case 2:
+      fill(#3FB229); 
+      break;
+    case 3:
+      fill(#816500);
+      break;
+    case 4:
+      fill(#816500);
+      break;
+    case 5:
+      fill(#816500);
+      break;
+    default:
+      break;
+    }*/
+    
+    fill(0);
+    
+    // Desenha uma elipse representando uma peça, a largura varia de acordo com o valor da peça
+    ellipse(torrePosX, h, h*i, peca);
+    i++;d
+  }
+}
