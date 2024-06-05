@@ -61,6 +61,8 @@ void draw() {
     limpaTorre(torre1);
     limpaTorre(torre2);
     limpaTorre(torre3);
+    chosen = null;
+    chose = false;
     
     torre1 = iniciaTorre();
     
