@@ -12,7 +12,7 @@ Stack<Disco> torre2;
 Stack<Disco> torre3;
 
 boolean chose;
-Disco chosen;
+Disco buffer;
 
 Botao restart;
 
@@ -46,8 +46,8 @@ void draw() {
   selecionado(torre3);
 
   if (chose) {
-    chosen.update(mouseX, mouseY);
-    chosen.show();
+    buffer.update(mouseX, mouseY);
+    buffer.show();
 
     selecionaTorre(torre1, posX1);
     selecionaTorre(torre2, posX2);
@@ -61,7 +61,7 @@ void draw() {
     limpaTorre(torre1);
     limpaTorre(torre2);
     limpaTorre(torre3);
-    chosen = null;
+    buffer = null;
     chose = false;
     
     torre1 = iniciaTorre();
@@ -87,7 +87,7 @@ void selecionado(Stack<Disco> torre) {
 
     if ((mouseX >= ultimo.posX-ultimo.l/2 && mouseX <= ultimo.posX+ultimo.l/2) && (mouseY >= ultimo.posY-ultimo.h/2 && mouseY <= ultimo.posY+ultimo.h/2)) {
       if (mousePressed  && chose == false) {
-        chosen = torre.pop();
+        buffer = torre.pop();
         chose = true;
       }
     }
@@ -104,13 +104,13 @@ void selecionaTorre(Stack<Disco> torre, int posX) {
     if (!torre.empty()) {
       Disco ultimo = torre.peek();
 
-      if (mousePressed && ultimo.l > chosen.l) {
-        torre.push(chosen);
+      if (mousePressed && ultimo.l > buffer.l) {
+        torre.push(buffer);
         chose = false;
       }
     } else {
       if (mousePressed) {
-        torre.push(chosen);
+        torre.push(buffer);
         chose = false;
       }
     }
@@ -121,7 +121,6 @@ Stack<Disco> iniciaTorre() {
   Stack<Disco> torre = new Stack<Disco>();
 
   for (int i = 0; i < n; i++) {
-
     Disco newDisco = new Disco((int)random(50, 200), h, color(random(255), random(255), random(255)));
 
     torre.push(newDisco);
