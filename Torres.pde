@@ -121,9 +121,8 @@ Stack<Disco> iniciaTorre() {
   Stack<Disco> torre = new Stack<Disco>();
 
   for (int i = 0; i < n; i++) {
-    int l = (int)random(50, 200);
 
-    Disco newDisco = new Disco(l, h, color(random(255), random(255), random(255)));
+    Disco newDisco = new Disco((int)random(50, 200), h, color(random(255), random(255), random(255)));
 
     torre.push(newDisco);
   }
