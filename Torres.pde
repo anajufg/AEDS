@@ -11,7 +11,7 @@ Stack<Disco> torre1;
 Stack<Disco> torre2;
 Stack<Disco> torre3;
 
-boolean chose;
+boolean disponivel;
 Disco buffer;
 
 Botao restart;
@@ -23,7 +23,7 @@ void setup() {
   torre2 = new Stack<Disco>();
   torre3 = new Stack<Disco>();
 
-  chose = false;
+  disponivel = true;
   
   restart = new Botao(width/2-180/2, height-100, 180, 45, #795126, #34210C, "RESTART", #FFC85A, 30);
 }
@@ -45,7 +45,7 @@ void draw() {
   selecionado(torre2);
   selecionado(torre3);
 
-  if (chose) {
+  if (!disponivel) {
     buffer.update(mouseX, mouseY);
     buffer.show();
 
@@ -62,7 +62,7 @@ void draw() {
     limpaTorre(torre2);
     limpaTorre(torre3);
     buffer = null;
-    chose = false;
+    disponivel = true;
     
     torre1 = iniciaTorre();
     
@@ -86,9 +86,9 @@ void selecionado(Stack<Disco> torre) {
     Disco ultimo = torre.peek();
 
     if ((mouseX >= ultimo.posX-ultimo.l/2 && mouseX <= ultimo.posX+ultimo.l/2) && (mouseY >= ultimo.posY-ultimo.h/2 && mouseY <= ultimo.posY+ultimo.h/2)) {
-      if (mousePressed  && chose == false) {
+      if (mousePressed  && disponivel == true) {
         buffer = torre.pop();
-        chose = true;
+        disponivel = false;
       }
     }
   }
@@ -106,12 +106,12 @@ void selecionaTorre(Stack<Disco> torre, int posX) {
 
       if (mousePressed && ultimo.l > buffer.l) {
         torre.push(buffer);
-        chose = false;
+        disponivel = true;
       }
     } else {
       if (mousePressed) {
         torre.push(buffer);
-        chose = false;
+        disponivel = true;
       }
     }
   }
