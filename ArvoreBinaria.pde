@@ -111,6 +111,30 @@ class ArvoreBinaria {
 
     }
   }
+  
+  void EmOrdem(No raiz) {
+    if (raiz == null) {
+      return;
+    }
+    if (raiz != null) {
+      EmOrdem(raiz.esq);
+      print(raiz.valor + "\n");
+      EmOrdem(raiz.dir);
+
+    }
+  }
+  
+   void PosOrdem(No raiz) {
+    if (raiz == null) {
+      return;
+    }
+    if (raiz != null) {
+      PosOrdem(raiz.esq);
+      PosOrdem(raiz.dir);
+      print(raiz.valor + "\n");
+
+    }
+  }
 }
 
 
@@ -129,7 +153,7 @@ void draw(){
 }
 
 void mouseClicked() {
-  arv.insere((int)random(1000)); 
-  arv.PreOrdem(arv.raiz);
+  arv.insere((int)random(50)); 
+  arv.PosOrdem(arv.raiz);
   print("\n");
 }
