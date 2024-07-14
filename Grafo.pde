@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 // Definição da classe Grafo
 class Grafo {
   int numVertices;
@@ -122,20 +124,78 @@ class Grafo {
   }
   
   // Algoritmo de Dijkstra para encontrar o caminho mais curto a partir de um vértice origem
-  void Dijkstra(int origem) {
+  void Dijkstra(int origem, int destino) {
     int[] menoresDist =  new int[numVertices];
-    int[] anterior = new int[numVertices];
-    int[] visitados = new int[numVertices];
+    int[] anterior = new int[numVertices]; 
     
-    // Inicializa as distâncias como infinito e o vetor de visitados como falso
-    for (int i = 0; i < numVertices; i++) {
-      menoresDist[i] = Integer.MAX_VALUE;
-      anterior[i] = -1;
-      visitados[i] = 0;
+    for (int v = 0; v < numVertices; v++) {
+      menoresDist[v] = Integer.MAX_VALUE;
+      anterior[v] = -1;
     }
     
-    menoresDist[origem] = 0;
-   
+    menoresDist[origem] = 0; 
+    
+    int[] Q = new int[numVertices];
+    
+    for(int i = 0; i < numVertices; i++) {
+      
+      int u = -1;
+      int uDist = Integer.MAX_VALUE;
+      for(int v = 0; v < numVertices; v++) {
+        if(Q[v] == 0 && menoresDist[v] < uDist) {
+          u = v;
+          uDist = menoresDist[v];
+        }
+      }
+      
+      Q[u] = 1;
+      
+      for(int v = 0; v < numVertices; v++) {
+        if(u == v || matrizAdj[u][v] == 0) continue;
+        
+        int alt = uDist + matrizAdj[u][v];
+        
+        if(alt < menoresDist[v]) {
+          menoresDist[v] = alt;
+          anterior[v] = u;
+        }
+      }
+    }
+    
+    Stack<Integer> caminho = new Stack<Integer>();
+    caminho.push(destino);
+    int v = anterior[destino];
+    while (v >=0) {
+      caminho.push(v);
+      v = anterior[v];
+    }
+    
+    desenhar(caminho);
+  }
+  
+  void desenhar(Stack<Integer> caminho) {
+    textAlign(CENTER);
+    // Desenha as arestas
+    stroke(0);
+    strokeWeight(1);
+    for (int i = 0; i < numVertices; i++) {
+      for (int j = i + 1; j < numVertices; j++) {
+        stroke(0);
+        if (caminho.contains(i) && caminho.contains(j)) stroke(255,0,0);
+        strokeWeight(matrizAdj[i][j]);
+        if (matrizAdj[i][j] > 0) line(posicoes[i].x, posicoes[i].y, posicoes[j].x, posicoes[j].y);
+      }
+    }
+    // Desenha os nós
+    fill(255);
+    stroke(0);
+    strokeWeight(1);
+    for (int i = 0; i < numVertices; i++) {
+      fill(255);
+      ellipse(posicoes[i].x, posicoes[i].y, raio * 2, raio * 2);
+      fill(0);
+      text(str(i), posicoes[i].x, posicoes[i].y+4);
+    }
   }
 }
 
@@ -143,19 +203,28 @@ Grafo grafo;
 
 void setup() {
   size(800, 600);
+  frameRate(60);
   
   int n = 10;
   int[][] adj = new int[n][n];
   
   for(int i = 0; i < n; i++)
-    for(int j = 0; j < n; j++)
-      adj[i][j] = random(1) > 0.5 ? int(random(1, 5)) : 0;
+    for(int j = 0; j < n; j++){
+      if(i == j){
+        adj[i][j] = 0;
+      }
+      else{
+        adj[i][j] = random(1) > 0.5 ? int(random(1, 5)) : 0;
+        adj[j][i] = adj[i][j];
+      }
+    }
   
   grafo = new Grafo(adj);
-
-
-  for(int i = 0; i < 1000; i++) grafo.atualizar();
   
+}
+
+void draw(){
   background(#F7D7AF);
-  grafo.desenhar();
+  grafo.atualizar();
+  grafo.Dijkstra(0, 7);
 }
