@@ -123,24 +123,27 @@ class Grafo {
     }
   }
   
-  // Algoritmo de Dijkstra para encontrar o caminho mais curto a partir de um vértice origem
+  // Algoritmo de Dijkstra para encontrar o caminho mais curto a partir de um vértice origem até um vértice destino
   void Dijkstra(int origem, int destino) {
-    int[] menoresDist =  new int[numVertices];
-    int[] anterior = new int[numVertices]; 
+    int[] menoresDist = new int[numVertices]; // Array para armazenar as menores distâncias conhecidas da origem até cada vértice
+    int[] anterior = new int[numVertices]; // Array para armazenar o vértice anterior no caminho mais curto até cada vértice
     
+    // Inicializa os arrays com valores iniciais
     for (int v = 0; v < numVertices; v++) {
-      menoresDist[v] = Integer.MAX_VALUE;
-      anterior[v] = -1;
+      menoresDist[v] = Integer.MAX_VALUE; // Inicializa todas as distâncias como infinito
+      anterior[v] = -1; // Define o vértice anterior como -1 (ainda não definido)
     }
     
-    menoresDist[origem] = 0; 
+    menoresDist[origem] = 0; // A distância da origem para ela mesma é 0
     
-    int[] Q = new int[numVertices];
+    int[] Q = new int[numVertices]; // Array para controlar os vértices visitados
     
+    // Loop principal do algoritmo de Dijkstra
     for(int i = 0; i < numVertices; i++) {
-      
       int u = -1;
       int uDist = Integer.MAX_VALUE;
+      
+      // Encontra o vértice u não visitado com a menor distância atual
       for(int v = 0; v < numVertices; v++) {
         if(Q[v] == 0 && menoresDist[v] < uDist) {
           u = v;
@@ -148,13 +151,15 @@ class Grafo {
         }
       }
       
-      Q[u] = 1;
+      Q[u] = 1; // Marca o vértice u como visitado
       
+      // Atualiza as distâncias dos vértices adjacentes ao vértice u
       for(int v = 0; v < numVertices; v++) {
-        if(u == v || matrizAdj[u][v] == 0) continue;
+        if(u == v || matrizAdj[u][v] == 0) continue; // Se v é u ou não há aresta entre u e v, continua para o próximo v
         
-        int alt = uDist + matrizAdj[u][v];
+        int alt = uDist + matrizAdj[u][v]; // Calcula a possível nova distância até v
         
+        // Se encontrar um caminho mais curto até v, atualiza menoresDist e anterior
         if(alt < menoresDist[v]) {
           menoresDist[v] = alt;
           anterior[v] = u;
@@ -162,15 +167,18 @@ class Grafo {
       }
     }
     
-    Stack<Integer> caminho = new Stack<Integer>();
-    caminho.push(destino);
-    int v = anterior[destino];
-    while (v >=0) {
+    // Reconstrói o caminho mais curto usando a pilha e desenha o caminho encontrado
+    Stack<Integer> caminho = new Stack<Integer>(); // Pilha para armazenar o caminho do destino até a origem
+    caminho.push(destino); // Inicia com o vértice de destino
+    int v = anterior[destino]; // Obtém o vértice anterior ao destino
+    
+    // Preenche a pilha com os vértices do caminho mais curto
+    while (v >= 0) {
       caminho.push(v);
       v = anterior[v];
     }
     
-    desenhar(caminho);
+    desenhar(caminho); // Chama a função desenhar para visualizar o caminho encontrado
   }
   
   void desenhar(Stack<Integer> caminho) {
