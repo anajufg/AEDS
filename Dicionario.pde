@@ -92,12 +92,25 @@ void mouseReleased() {
       int corAtual = coresCelulas.get(chave);
       int corIndex = -1;
       
-      // Obtem a cor da celula escolhida por meio array de cores
+      // Obtem o indice da cor atual no array de cores possiveis
       for(int i = 0; i < cores.length; i++) {
-        //////////////////////////////////////////////////////////////////////
+        if (corAtual == cores[i]) {
+          corIndex = i;
+          break;
+        }
       }
       
-      int novaCor = color(0);
+      // Calcula o index da proxima cor 
+      int proxIndex = (corIndex + 1) % cores.length;
+      int novaCor = cores[proxIndex];
+      
+      // Nao armazena a cor branca
+      if (novaCor == color(255)) {
+         coresCelulas.remove(chave);
+      } else {
+        coresCelulas.put(chave, novaCor);
+      }
+      
       coresCelulas.put(chave, novaCor);
     } else if (mouseButton == RIGHT) {
       // Botão direito: apaga a célula (remove a cor)
