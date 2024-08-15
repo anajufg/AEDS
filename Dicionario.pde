@@ -4,7 +4,7 @@ import java.util.HashMap;
 HashMap<String, Integer> coresCelulas;
 
 // Array com as sores possíveis
-color[] cores = {color(0), color(0, 255, 0), color(255, 0, 0), color(0, 0, 255), color(#F7F720), color(255)};
+color[] cores = {color(0), color(0, 255, 0), color(255, 0, 0), color(0, 0, 255), color(255, 255, 0), color(255)};
 
 // Variáveis de controle da visualização
 float zoom = 1.0;
@@ -88,8 +88,9 @@ void mouseReleased() {
     String chave = gradeX + "," + gradeY;
     
     if (mouseButton == LEFT) {
-      // Obtem a cor atyal da celula
-      int corAtual = coresCelulas.get(chave);
+      // Obtem a cor atual da celula
+      // getOrDefault, caso a chave não estiver no dicionário, o segundo parâmetro será retornado 
+      int corAtual = coresCelulas.getOrDefault(chave, color(255));
       int corIndex = -1;
       
       // Obtem o indice da cor atual no array de cores possiveis
@@ -110,8 +111,7 @@ void mouseReleased() {
       } else {
         coresCelulas.put(chave, novaCor);
       }
-      
-      coresCelulas.put(chave, novaCor);
+
     } else if (mouseButton == RIGHT) {
       // Botão direito: apaga a célula (remove a cor)
       coresCelulas.remove(chave);
