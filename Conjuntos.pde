@@ -9,7 +9,7 @@ class Grafo {
   float raio = 10; // Raio dos nós
   float k = 0.01; // Constante da mola para a atração
   float c = 3000; // Constante de repulsão
-  int[] coresPossiveis, cores;
+  int[] coresPossiveis;
 
   // Construtor da classe Grafo
   Grafo(int numVertices) {
@@ -24,10 +24,8 @@ class Grafo {
     inicializarPosicoes();
 
     for (int i = 0; i < numVertices; i++) {
-      coresPossiveis[i] = (int)color(random(255), random(255), random(255));
+      coresPossiveis[i] = color(random(255), random(255), random(255));
     }
-
-    cores = colorirGrafo();
   }
 
   // Adiciona uma aresta entre dois vértices
@@ -65,49 +63,6 @@ class Grafo {
     velocidades[0] = new PVector(0, 0);
   }
 
-  // Atualiza as posições das partículas
-  void atualizar() {
-    for (int i = 1; i < numVertices; i++) {
-      PVector forca = new PVector(0, 0);
-
-      // Força de repulsão
-      for (int j = 0; j < numVertices; j++) {
-        if (i != j) {
-          PVector direcao = PVector.sub(posicoes[i], posicoes[j]);
-          float distancia = direcao.mag();
-          if (distancia > 0) {
-            direcao.normalize();
-            float forcaRepulsao = c / (distancia * distancia);
-            direcao.mult(forcaRepulsao);
-            forca.add(direcao);
-          }
-        }
-      }
-
-      // Força de atração
-      for (int j = 0; j < numVertices; j++) {
-        if (matrizAdj.contains(new PVector(i, j))) {
-          PVector direcao = PVector.sub(posicoes[j], posicoes[i]);
-          float distancia = direcao.mag();
-          direcao.normalize();
-          float forcaAtracao = k * (distancia - raio);
-          direcao.mult(forcaAtracao);
-          forca.add(direcao);
-        }
-      }
-
-      velocidades[i].add(forca);
-      posicoes[i].add(velocidades[i]);
-
-      // Reduz a velocidade para estabilizar a simulação
-      velocidades[i].mult(0.5);
-
-      // Mantém as partículas dentro da tela
-      if (posicoes[i].x < 0 || posicoes[i].x > width) velocidades[i].x *= -1;
-      if (posicoes[i].y < 0 || posicoes[i].y > height)velocidades[i].y *= -1;
-    }
-  }
-
   // Desenha o grafo
   void desenhar() {
     textAlign(CENTER);
@@ -123,10 +78,9 @@ class Grafo {
     }
 
     // Desenha os nós
-    fill(255);
-    stroke(255);
-    strokeWeight(1);
+    noStroke();
     for (int i = 0; i < numVertices; i++) {
+      int[] cores = colorirGrafo();
       fill(coresPossiveis[cores[i]]);
       ellipse(posicoes[i].x, posicoes[i].y, raio * 2, raio * 2);
       fill(0);
@@ -139,21 +93,17 @@ class Grafo {
     boolean[] coresDisp = new boolean[numVertices];
 
     for (int i = 0; i < numVertices; i++) {
-      cores[i] = 0;
       coresDisp[i] = true;
     }
 
     for (int v = 0; v < numVertices; v++) {
       for (int u = 0; u < numVertices; u++) {
-        PVector x = new PVector(v, u);
-        if (matrizAdj.contains(x)) {
-          if (cores[u] != 0) {
-            coresDisp[cores[u]] = false;
-          }
+        if (cores[u] != 0) {
+          coresDisp[cores[u]] = false;
         }
       }
 
-      for (int cor = 0; cor < numVertices; cor++) {
+      for (int cor = 1; cor < numVertices; cor++) {
         if (coresDisp[cor] == true) {
           cores[v] = cor;
           break;
@@ -164,9 +114,6 @@ class Grafo {
         coresDisp[i] = true;
       }
     }
-    for (int i = 0; i < numVertices; i++) {
-        println(cores[i]);
-      }
     return cores;
   }
 }
@@ -183,6 +130,5 @@ void setup() {
 
 void draw() {
   background(#F7D7AF);
-  //grafo.atualizar();
   grafo.desenhar();
 }
