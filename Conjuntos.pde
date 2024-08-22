@@ -10,8 +10,8 @@ class Grafo {
   float raio = 10; // Raio dos nós
   float k = 0.01; // Constante da mola para a atração
   float c = 3000; // Constante de repulsão
-  int numArestas;
-  
+  int[] cores;
+
   // Construtor da classe Grafo
   Grafo(int numVertices) {
     this.numVertices = numVertices;
@@ -19,20 +19,30 @@ class Grafo {
     posicoes = new PVector[numVertices];
     velocidades = new PVector[numVertices];
     
-    // Numero aleatorio de arestas
-    numArestas = (int)random(numVertices);
-    
-    for(int i = 0; i < numArestas; i++) {
-      adicionarAresta((int)random(numVertices), (int)random(numVertices));
-    }
-    
+    cores = colorirGrafo();
+
+    adicionarAresta();
+
     inicializarPosicoes();
   }
-  
+
   // Adiciona uma aresta entre dois vértices
-  void adicionarAresta(int i, int j) {
-    if(i < j && !matrizAdj.contains(new PVector(i, j))) {
-      matrizAdj.add(new PVector(i, j));
+  void adicionarAresta() {
+    int aresta;
+
+    for (int i = 0; i < numVertices; i++) {
+      for (int j = 0; j < numVertices; j++) {
+
+        if (i != j) {
+          aresta = random(1) > 0.5 ? int(random(1, 5)) : 0;
+
+          if (aresta != 0) {
+            if (i < j && !matrizAdj.contains(new PVector(i, j))) {
+              matrizAdj.add(new PVector(i, j));
+            }
+          }
+        }
+      }
     }
   }
 
@@ -55,7 +65,7 @@ class Grafo {
   void atualizar() {
     for (int i = 1; i < numVertices; i++) {
       PVector forca = new PVector(0, 0);
-      
+
       // Força de repulsão
       for (int j = 0; j < numVertices; j++) {
         if (i != j) {
@@ -89,9 +99,8 @@ class Grafo {
       velocidades[i].mult(0.5);
 
       // Mantém as partículas dentro da tela
-      if (posicoes[i].x < 0 || posicoes[i].x > width) velocidades[i].x *= -1; 
+      if (posicoes[i].x < 0 || posicoes[i].x > width) velocidades[i].x *= -1;
       if (posicoes[i].y < 0 || posicoes[i].y > height)velocidades[i].y *= -1;
-     
     }
   }
 
@@ -114,11 +123,51 @@ class Grafo {
     stroke(255);
     strokeWeight(1);
     for (int i = 0; i < numVertices; i++) {
-      fill(255);
+      fill(cores[i]);
       ellipse(posicoes[i].x, posicoes[i].y, raio * 2, raio * 2);
       fill(0);
       text(str(i), posicoes[i].x, posicoes[i].y+4);
     }
+  }
+
+  int[] colorirGrafo() {
+    HashSet<Integer> coresCriadas = new HashSet<Integer>();
+    int[] cores = new int[numVertices];
+    boolean[] coresDisp = new boolean[numVertices];
+    int[] coresPossiveis = new int[numVertices];
+
+    for (int i = 0; i < numVertices; i++) {
+      coresPossiveis[i] = (int)color(random(255), random(255), random(255));
+      cores[i] = 0;
+      coresDisp[i] = true;
+    }
+
+    for (int v = 0; v < numVertices; v++) {
+      for (int u = 0; u < numVertices; u++) {
+        PVector x = new PVector(v, u);
+        if (matrizAdj.contains(x)) {
+          if (cores[u] != 0) {
+            coresDisp[u] = false;
+          }
+        }
+      }
+
+      for (int cor = 0; cor < numVertices; cor++) {
+        if (coresDisp[cor] == true) {
+          cores[v] = coresPossiveis[cor];
+          break;
+        }
+      }
+
+      for (int i = 0; i < numVertices; i++) {
+        coresDisp[i] = true;
+      }
+    }
+
+    for (int i = 0; i < numVertices; i++) {
+      println(cores[i]);
+    }
+    return cores;
   }
 }
 
@@ -127,14 +176,13 @@ Grafo grafo;
 void setup() {
   size(800, 600);
   frameRate(60);
-  
+
   int n = 10;
   grafo = new Grafo(n);
-  
 }
 
-void draw(){
+void draw() {
   background(#F7D7AF);
-  grafo.atualizar();
+  //grafo.atualizar();
   grafo.desenhar();
 }
