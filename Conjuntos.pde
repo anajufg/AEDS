@@ -1,4 +1,3 @@
-import java.util.Stack;
 import java.util.HashSet;
 
 // Definição da classe Grafo
@@ -10,7 +9,7 @@ class Grafo {
   float raio = 10; // Raio dos nós
   float k = 0.01; // Constante da mola para a atração
   float c = 3000; // Constante de repulsão
-  int[] cores;
+  int[] coresPossiveis, cores;
 
   // Construtor da classe Grafo
   Grafo(int numVertices) {
@@ -18,12 +17,17 @@ class Grafo {
     matrizAdj = new HashSet<PVector>();
     posicoes = new PVector[numVertices];
     velocidades = new PVector[numVertices];
-    
-    cores = colorirGrafo();
+    coresPossiveis = new int[numVertices];
 
     adicionarAresta();
 
     inicializarPosicoes();
+
+    for (int i = 0; i < numVertices; i++) {
+      coresPossiveis[i] = (int)color(random(255), random(255), random(255));
+    }
+
+    cores = colorirGrafo();
   }
 
   // Adiciona uma aresta entre dois vértices
@@ -123,7 +127,7 @@ class Grafo {
     stroke(255);
     strokeWeight(1);
     for (int i = 0; i < numVertices; i++) {
-      fill(cores[i]);
+      fill(coresPossiveis[cores[i]]);
       ellipse(posicoes[i].x, posicoes[i].y, raio * 2, raio * 2);
       fill(0);
       text(str(i), posicoes[i].x, posicoes[i].y+4);
@@ -131,13 +135,10 @@ class Grafo {
   }
 
   int[] colorirGrafo() {
-    HashSet<Integer> coresCriadas = new HashSet<Integer>();
     int[] cores = new int[numVertices];
     boolean[] coresDisp = new boolean[numVertices];
-    int[] coresPossiveis = new int[numVertices];
 
     for (int i = 0; i < numVertices; i++) {
-      coresPossiveis[i] = (int)color(random(255), random(255), random(255));
       cores[i] = 0;
       coresDisp[i] = true;
     }
@@ -147,14 +148,14 @@ class Grafo {
         PVector x = new PVector(v, u);
         if (matrizAdj.contains(x)) {
           if (cores[u] != 0) {
-            coresDisp[u] = false;
+            coresDisp[cores[u]] = false;
           }
         }
       }
 
       for (int cor = 0; cor < numVertices; cor++) {
         if (coresDisp[cor] == true) {
-          cores[v] = coresPossiveis[cor];
+          cores[v] = cor;
           break;
         }
       }
@@ -163,10 +164,9 @@ class Grafo {
         coresDisp[i] = true;
       }
     }
-
     for (int i = 0; i < numVertices; i++) {
-      println(cores[i]);
-    }
+        println(cores[i]);
+      }
     return cores;
   }
 }
