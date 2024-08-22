@@ -10,6 +10,7 @@ class Grafo {
   float raio = 10; // Raio dos nós
   float k = 0.01; // Constante da mola para a atração
   float c = 3000; // Constante de repulsão
+  int numArestas;
   
   // Construtor da classe Grafo
   Grafo(int numVertices) {
@@ -17,32 +18,31 @@ class Grafo {
     matrizAdj = new HashSet<PVector>();
     posicoes = new PVector[numVertices];
     velocidades = new PVector[numVertices];
+    
+    // Numero aleatorio de arestas
+    numArestas = (int)random(numVertices);
+    
+    for(int i = 0; i < numArestas; i++) {
+      adicionarAresta((int)random(numVertices), (int)random(numVertices));
+    }
+    
     inicializarPosicoes();
   }
   
-  /*Grafo(int[][] adj) {
-    this.numVertices = adj.length;
-    matrizAdj = adj;
-    posicoes = new PVector[numVertices];
-    velocidades = new PVector[numVertices];
-    inicializarPosicoes();
-  }*/
-
   // Adiciona uma aresta entre dois vértices
   void adicionarAresta(int i, int j) {
-    if(i < j) {
-      if (!matrizAdj.contains(new PVector(i, j))) matrizAdj.add(new PVector(i, j));
+    if(i < j && !matrizAdj.contains(new PVector(i, j))) {
+      matrizAdj.add(new PVector(i, j));
     }
   }
-  
 
   // Inicializa as posições das partículas em um círculo
   void inicializarPosicoes() {
     float angulo = TWO_PI / (numVertices - 1);
     float raioCirculo = min(width, height) / 3;
-    for (int i = 1; i < numVertices; i++) {
-      float x = width / 2 + raioCirculo * cos((i - 1) * angulo);
-      float y = height / 2 + raioCirculo * sin((i - 1) * angulo);
+    for (int i = 0; i < numVertices; i++) {
+      float x = width / 2 + raioCirculo * cos((i) * angulo);
+      float y = height / 2 + raioCirculo * sin((i) * angulo);
       posicoes[i] = new PVector(x, y);
       velocidades[i] = new PVector(0, 0);
     }
@@ -103,39 +103,15 @@ class Grafo {
     strokeWeight(1);
     for (int i = 0; i < numVertices; i++) {
       for (int j = i + 1; j < numVertices; j++) {
-        //strokeWeight(matrizAdj[i][j]);
-        if (matrizAdj.contains(new PVector(i, j))) line(posicoes[i].x, posicoes[i].y, posicoes[j].x, posicoes[j].y);
+        strokeWeight(1);
+        PVector x = new PVector(i, j);
+        if (matrizAdj.contains(x)) line(posicoes[i].x, posicoes[i].y, posicoes[j].x, posicoes[j].y);
       }
     }
 
     // Desenha os nós
     fill(255);
     stroke(255);
-    strokeWeight(1);
-    for (int i = 0; i < numVertices; i++) {
-      fill(255);
-      ellipse(posicoes[i].x, posicoes[i].y, raio * 2, raio * 2);
-      fill(0);
-      text(str(i), posicoes[i].x, posicoes[i].y+4);
-    }
-  }
-  
-  void desenhar(Stack<Integer> caminho) {
-    textAlign(CENTER);
-    // Desenha as arestas
-    stroke(0);
-    strokeWeight(1);
-    for (int i = 0; i < numVertices; i++) {
-      for (int j = i + 1; j < numVertices; j++) {
-        stroke(0);
-        if (caminho.contains(i) && caminho.contains(j)) stroke(255,0,0);
-        //strokeWeight(matrizAdj[i][j]);
-        if (matrizAdj.contains(new PVector(i, j))) line(posicoes[i].x, posicoes[i].y, posicoes[j].x, posicoes[j].y);
-      }
-    }
-    // Desenha os nós
-    fill(255);
-    stroke(0);
     strokeWeight(1);
     for (int i = 0; i < numVertices; i++) {
       fill(255);
@@ -153,24 +129,12 @@ void setup() {
   frameRate(60);
   
   int n = 10;
-  int[][] adj = new int[n][n];
-  
-  for(int i = 0; i < n; i++)
-    for(int j = 0; j < n; j++){
-      if(i == j){
-        adj[i][j] = 0;
-      }
-      else{
-        adj[i][j] = random(1) > 0.5 ? int(random(1, 5)) : 0;
-        adj[j][i] = adj[i][j];
-      }
-    }
-  
-  grafo = new Grafo(adj);
+  grafo = new Grafo(n);
   
 }
 
 void draw(){
   background(#F7D7AF);
   grafo.atualizar();
+  grafo.desenhar();
 }
