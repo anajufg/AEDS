@@ -7,18 +7,18 @@ class Grafo {
   PVector[] posicoes; // Posições das partículas (nós do grafo)
   PVector[] velocidades; // Velocidades das partículas
   float raio = 10; // Raio dos nós
-  float k = 0.01; // Constante da mola para a atração
-  float c = 3000; // Constante de repulsão
   int[] coresPossiveis;
+  int[] coresIndex;
 
   // Construtor da classe Grafo
   Grafo(int numVertices) {
     this.numVertices = numVertices;
     matrizAdj = new HashSet<PVector>();
     posicoes = new PVector[numVertices];
-    velocidades = new PVector[numVertices];
     coresPossiveis = new int[numVertices];
-
+    
+    coresIndex = colorirGrafo();
+    
     adicionarAresta();
 
     inicializarPosicoes();
@@ -56,11 +56,9 @@ class Grafo {
       float x = width / 2 + raioCirculo * cos((i) * angulo);
       float y = height / 2 + raioCirculo * sin((i) * angulo);
       posicoes[i] = new PVector(x, y);
-      velocidades[i] = new PVector(0, 0);
     }
     // Posição fixa do vértice 0
     posicoes[0] = new PVector(width / 2, height / 2);
-    velocidades[0] = new PVector(0, 0);
   }
 
   // Desenha o grafo
@@ -80,8 +78,7 @@ class Grafo {
     // Desenha os nós
     noStroke();
     for (int i = 0; i < numVertices; i++) {
-      int[] cores = colorirGrafo();
-      fill(coresPossiveis[cores[i]]);
+       fill(coresPossiveis[coresIndex[i]]);
       ellipse(posicoes[i].x, posicoes[i].y, raio * 2, raio * 2);
       fill(0);
       text(str(i), posicoes[i].x, posicoes[i].y+4);
